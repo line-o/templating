@@ -16,11 +16,23 @@ declare option output:media-type "text/html";
  : The HTML is passed in the request from the controller.
  : Run it through the templating system and return the result.
  :)
-templates:render(
+templates:apply(
     request:get-data(), 
+    xs:QName(?),
+    map { "my-model-item": 'xxx' },
+    map {
+        $templates:CONFIG_APP_ROOT      : $test:app-root,
+        $templates:CONFIG_STOP_ON_ERROR : true()
+    })
+
+(: alternative :)
+(:
+templates:render(
+    request:get-data(),
     map { "my-model-item": 'xxx' },
     map {
         $templates:CONFIG_FN_RESOLVER   : xs:QName(?),
         $templates:CONFIG_APP_ROOT      : $test:app-root,
         $templates:CONFIG_STOP_ON_ERROR : true()
     })
+:)
