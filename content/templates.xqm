@@ -114,7 +114,7 @@ function templates:configure(
     let $configuration := map:merge((
         $templates:DEFAULT_CONFIG,
         $mapped-config-options
-    ))
+    ), map {"duplicates": "use-last"})
 
     return
         map:put($model, $templates:CONFIGURATION, $configuration)
@@ -152,7 +152,7 @@ function templates:merge-legacy-config(
     else map:merge((
         $maybe-config,
         map { $templates:CONFIG_FN_RESOLVER : $maybe-resolver }
-    ))
+    ), map {"duplicates": "use-last"})
 };
 
 declare variable $templates:DEFAULT_CONFIG := map {
@@ -300,7 +300,8 @@ declare %private
 function templates:process-output($node as element(), $model as map(*), $output as item()*) {
     typeswitch($output)
         case map(*) return
-            templates:process-children($node/node(), map:merge(($output, $model)))
+            templates:process-children($node/node(),
+                map:merge(($output, $model), map {"duplicates": "use-last"}))
         default return
             $output
 };
@@ -518,7 +519,7 @@ function templates:surround-options($model as map(*), $options as xs:string?) as
         map:merge((
             templates:parse-options($model, $options),
             $model
-        ))
+        ), map {"duplicates": "use-last"})
 };
 
 (:~
