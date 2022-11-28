@@ -1,7 +1,7 @@
 xquery version "3.1";
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace lib="http://exist-db.org/xquery/html-templating/lib";
+import module namespace apps="http://exist-db.org/xquery/html-templating/apps";
 
 
 import module namespace test="test" at "test.xqm";
@@ -56,10 +56,15 @@ declare variable $app:lookup :=
 templates:apply(
     request:get-data(),
     $app:lookup,
-    map { "my-model-item": 'xxx' },
     map {
-        $templates:CONFIG_APP_ROOT      : $test:app-root,
-        $templates:CONFIG_STOP_ON_ERROR : true()
+        "page-title": "This is the title",
+        "my-model-item": 'xxx', 
+        'includes': map{ 'menubar' : 'included.html' }
+    },
+    map {
+        $templates:CONFIG_APP_ROOT          : $test:app-root,
+        $templates:CONFIG_FILTER_ATTRIBUTES : true(),
+        $templates:CONFIG_STOP_ON_ERROR     : true()
     })
 
 (: alternative :)
