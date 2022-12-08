@@ -98,7 +98,7 @@ declare function templates:apply (
     $template as node(),
     $resolver as function(xs:string, xs:integer) as function(*)?,
     $model as map(*)?
-) {
+) as node()* {
     templates:apply($template, $resolver, $model, ())
 };
 
@@ -129,7 +129,7 @@ declare function templates:apply (
     $resolver as function(xs:string, xs:integer) as function(*)?,
     $model as map(*)?,
     $configuration as map(*)?
-) {
+) as node()* {
     templates:process($template,
         templates:configure($model,
             templates:merge-legacy-config($configuration, $resolver)))
@@ -147,7 +147,7 @@ declare function templates:render (
     $template as node(),
     $model as map(*)?,
     $configuration as map(*)?
-) {
+) as node()* {
     templates:process($template,
         templates:configure($model, $configuration))
 };
