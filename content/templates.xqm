@@ -271,7 +271,7 @@ declare function templates:surround (
     $using as xs:string?, $options as xs:string?
 ) as node()* {
     let $doc := templates:resolve-template($with, $model)
-    let $template := if ($using) then $doc//*[@id = $using] else $doc
+    let $template := if ($using) then $doc//@id[. = $using]/.. else $doc
     let $empty := empty($template)
 
     return
@@ -279,8 +279,10 @@ declare function templates:surround (
             error($templates:E_TEMPLATE_NOT_FOUND,
                 "surround: template not found at " || $with ||
                 " - using " || $using)
-        else if ($empty) then
+        else if ($empty) then (
+            comment { "Surround not found: " || $with },
             templates:process-children($node/node(), $model)
+        )
         else
             let $model := templates:surround-options($model, $options)
             let $merged := templates:process-surround($content, $node, $at)
