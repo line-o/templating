@@ -845,9 +845,9 @@ function templates:process-element ($node as node(), $model as map(*)) {
 };
 
 (:~
- : Check if the current $node has a template function attribute declared
- : the obsolete declaration for 'templates:parse-params' is ignored and
- : handled as if no declaration was found.
+ : Check if the current $node has a template function attribute declared.
+ : An exception is thrown when the function could not be found and
+ : $templates:CONFIG_STOP_ON_ERROR is set to true
  :)
 declare %private
 function templates:get-template-function (
@@ -855,7 +855,7 @@ function templates:get-template-function (
 ) as function(*)? {
     let $attr := $node/@*[local-name(.) = $templates:ATTR_DATA_TEMPLATE]
     return
-        if (empty($attr) or $attr = 'templates:parse-params') then ()
+        if (empty($attr)) then ()
         else
             let $f := tmpl-util:resolve-fn($attr/string(), 
                 $model($templates:CONFIGURATION)($templates:CONFIG_FN_RESOLVER),
